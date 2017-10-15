@@ -1,0 +1,29 @@
+set(CURRENT_TARGET "lgm5770u")
+message("Parsing ${CURRENT_TARGET}")
+
+if (NOT SWIG_EXECUTABLE)
+    set(SWIG_EXECUTABLE $ENV{SWIG_EXECUTABLE})
+endif ()
+find_package(SWIG 3 REQUIRED)
+include(${SWIG_USE_FILE})
+
+find_package(PythonInterp 3)
+find_package(PythonLibs 3)
+
+include_directories(${PYTHON_INCLUDE_PATH})
+include_directories(${CMAKE_SOURCE_DIR}/LGM5770U/)
+link_directories(${CMAKE_SOURCE_DIR}/LGM5770U/)
+
+set(CMAKE_SWIG_FLAGS "-threads")
+set_property(SOURCE lgm5770u.i PROPERTY CPLUSPLUS ON)
+set(SWIG_MODULE_${CURRENT_TARGET}_EXTRA_DEPS
+        ${CMAKE_SOURCE_DIR}/LGM5770U/LGM5770U.h
+        ${CMAKE_SOURCE_DIR}/LGM5770U/libLGM5770U.a
+        )
+SWIG_ADD_MODULE(${CURRENT_TARGET} python lgm5770u.i)  #SWIG_ADD_LIBRARY(${CURRENT_TARGET} LANGUAGE python SOURCES lgm5770u.i)  # cmake 3.8+
+SWIG_LINK_LIBRARIES(${CURRENT_TARGET} ${PYTHON_LIBRARIES})
+SWIG_LINK_LIBRARIES(${CURRENT_TARGET} LGM5770U)
+add_custom_command(TARGET _${CURRENT_TARGET} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/lgm5770u.py" "${CMAKE_SOURCE_DIR}/Bindings/Python"
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/_lgm5770u.so" "${CMAKE_SOURCE_DIR}/Bindings/Python"
+        )
