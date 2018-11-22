@@ -95,45 +95,30 @@ except __builtin__.Exception:
         pass
     _newclass = 0
 
-Info = _lgm5770u.Info
-Warning = _lgm5770u.Warning
-Error = _lgm5770u.Error
 
-def LGM5770U_new(address, name, connected_cb=None, log_cb=None):
-    return _lgm5770u.LGM5770U_new(address, name, connected_cb, log_cb)
-LGM5770U_new = _lgm5770u.LGM5770U_new
-
-def get_address(t):
-    return _lgm5770u.get_address(t)
-get_address = _lgm5770u.get_address
-
-def get_name(t):
-    return _lgm5770u.get_name(t)
-get_name = _lgm5770u.get_name
+def new():
+    return _lgm5770u.new()
+new = _lgm5770u.new
 
 def delete(t):
     return _lgm5770u.delete(t)
 delete = _lgm5770u.delete
 
-def connect(t):
-    return _lgm5770u.connect(t)
+def connect(t, address, safe_connect):
+    return _lgm5770u.connect(t, address, safe_connect)
 connect = _lgm5770u.connect
+
+def disconnect(t):
+    return _lgm5770u.disconnect(t)
+disconnect = _lgm5770u.disconnect
 
 def is_connected(t):
     return _lgm5770u.is_connected(t)
 is_connected = _lgm5770u.is_connected
 
-def set_auto_reconnect(t, is_reconnect):
-    return _lgm5770u.set_auto_reconnect(t, is_reconnect)
-set_auto_reconnect = _lgm5770u.set_auto_reconnect
-
-def set_reconnect_delay(t, delay_s):
-    return _lgm5770u.set_reconnect_delay(t, delay_s)
-set_reconnect_delay = _lgm5770u.set_reconnect_delay
-
-def restart(t):
-    return _lgm5770u.restart(t)
-restart = _lgm5770u.restart
+def get_firmware_version(t):
+    return _lgm5770u.get_firmware_version(t)
+get_firmware_version = _lgm5770u.get_firmware_version
 
 def read(t):
     return _lgm5770u.read(t)
@@ -155,33 +140,9 @@ def set_auto_read_delay(t, delay_ms):
     return _lgm5770u.set_auto_read_delay(t, delay_ms)
 set_auto_read_delay = _lgm5770u.set_auto_read_delay
 
-def wait_till_ready(t):
-    return _lgm5770u.wait_till_ready(t)
-wait_till_ready = _lgm5770u.wait_till_ready
-
 def cancel_read(t):
     return _lgm5770u.cancel_read(t)
 cancel_read = _lgm5770u.cancel_read
-
-
-import ctypes
-
-py_connected_cb_type = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_bool)
-py_log_cb_type = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p, ctypes.c_char_p)
-
-def new(address, name, on_connected = None, on_log = None):
-    if on_connected:
-        f = py_connected_cb_type(on_connected)
-        f_ptr = ctypes.cast(f, ctypes.c_void_p).value
-    else:
-        f_ptr = 0
-    if on_log:
-        g = py_log_cb_type(on_log)
-        g_ptr = ctypes.cast(g, ctypes.c_void_p).value
-    else:
-        g_ptr = 0
-    return _lgm5770u.LGM5770U_new(address, name, f_ptr, g_ptr)
-
 # This file is compatible with both classic and new-style classes.
 
 
